@@ -5,7 +5,9 @@ block content
   script(src="https://unpkg.com/axios/dist/axios.min.js")
   
   form#busForm
-    input#bus(type="text", pattern="([0-9]{3})|([0-9]{3} +)+")
+    input#bus(type="text", pattern="([0-9]{3})|([Nn][0-9]{2})|(([0-9]{3} )([0-9]{3} ?)*)|(([Nn][0-9]{2} )([Nn][0-9]{2} ?)*)")
+  #popup
+    span#popupSpan Nie ma żadnego autobusu na trasie!
   #map
   script(async, defer, src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDl4DVYLh4h_5WdJ46t9_g0zwAqw57TJUU&callback=initMap')
     
