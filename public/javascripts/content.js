@@ -1,6 +1,5 @@
 const api_key = "2797b5a7-48f4-42a3-a062-bf8cf76357d9"
 const mapsApi_key = "AIzaSyDl4DVYLh4h_5WdJ46t9_g0zwAqw57TJUU"
-console.log(api_key)
 
 window.addEventListener('DOMContentLoaded', () => {
   const busForm = document.querySelector('form#busForm');
@@ -8,59 +7,66 @@ window.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     let busNumber = document.querySelector('input#bus').value
     busNumber = busNumber.trim();
-    console.log(busNumber.length)
+    //console.log(busNumber.length)
+
+    busNumber = busNumber.split("")
+    busNumber = busNumber.map(elem => {
+      if(elem == elem.toLowerCase()){
+        return elem.toUpperCase()
+      }else{
+        return elem
+      }
+    }).join("")
 
     if(busNumber.length > 3){
       busNumber = busNumber.split(" ")
       console.log(busNumber)
+    }else{
+      busNumber = [busNumber]
     }
-    if(typeof(busNumber) == "string"){
-      if(busNumber.substr(0,1) === 'n'){
-        busNumber = busNumber.substr(0,1).toUpperCase() + busNumber.substr(1,3)
-        console.log(busNumber)
-      }
-    }
+    console.log(busNumber)
     getBus(busNumber)
   })
 })
 
 function getBus(busNumber){
+  //console.log(busNumber, "busNumber z getBus")
   const object = []
   let avgLat = 0;
   let avgLng = 0;
-  axios.all([
-    axios.get(`https://api.um.warszawa.pl/api/action/busestrams_get/?resource_id=f2e5503e-927d-4ad3-9500-4ab9e55deb59&apikey=${api_key}&type=1&line=${busNumber}`),
-    axios.get(`https://api.um.warszawa.pl/api/action/busestrams_get/?resource_id=f2e5503e-927d-4ad3-9500-4ab9e55deb59&apikey=${api_key}&type=1&line=N01`)
-  ])
-      .then(axios.spread((response, response2) => {
-        const results = response.data.result
-        console.log(results, response2.data.result)
-        if(results == "Błędna metoda lub parametry wywołania"){
-          console.log(`Wystąpił błąd - ${results}`)
-          document.querySelector('#popupSpan').style.visibility = 'visible'
-          document.querySelector('#popupSpan').innerHTML = `Wystąpił błąd - ${results}. Spróbuj ponownie`
-          return
-        }
-        results.map(elem => {
-          object.push([elem.Lines, elem.Lat, elem.Lon])
-          //console.log(elem.Lat)
-          avgLat += elem.Lat
-          avgLng += elem.Lon
-        })
-      })).then( () => {
-        avgLat = Number(avgLat/object.length)
-        avgLng = Number(avgLng/object.length)
-        console.log(object, isNaN(avgLat), avgLng)
-        if(object.length == 0){
-          document.querySelector('#popupSpan').style.visibility = 'visible'
-          console.log("dziala visible")
-        }else{
-          document.querySelector('#popupSpan').style.visibility = 'hidden'
-          console.log("dziala invisible")
-        }
-      }).then( () => {
-        initMap(object, avgLat, avgLng)
-      });
+  const urlArray = [];
+  let type;
+  for(let i = 0; i < busNumber.length; i++){
+    (busNumber[i].length >= 3)? type = 1 : type = 2;
+    urlArray.push(`https://api.um.warszawa.pl/api/action/busestrams_get/?resource_id=f2e5503e-927d-4ad3-9500-4ab9e55deb59&apikey=${api_key}&type=${type}&line=${busNumber[i]}`)
+  }
+  //console.log(urlArray, "urlArray")
+  const promiseArray = urlArray.map( url => axios.get(url))
+  axios.all(promiseArray)
+  .then(function(results){
+    let newResults = results.map(elem => elem.data.result)
+    newResults = newResults.reduce((a, b) => a.concat(b), []);
+    console.log(newResults)
+    newResults.map(elem => {
+      object.push([elem.Lines, elem.Lat, elem.Lon])
+      avgLat += elem.Lat
+      avgLng += elem.Lon
+    })
+    //console.log(object, "nowy obiekt")
+  }).then( () => {
+    avgLat = Number(avgLat/object.length)
+    avgLng = Number(avgLng/object.length)
+    //console.log(object, isNaN(avgLat), avgLng)
+    if(object.length == 0){
+      document.querySelector('#popupSpan').style.visibility = 'visible'
+      //console.log("dziala visible")
+    }else{
+      document.querySelector('#popupSpan').style.visibility = 'hidden'
+      //console.log("dziala invisible")
+    }
+  }).then( () => {
+    initMap(object, avgLat, avgLng)
+  });
 }
 
 function initMap(object, avgLat, avgLng) {

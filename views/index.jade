@@ -5,7 +5,7 @@ block content
   script(src="https://unpkg.com/axios/dist/axios.min.js")
   
   form#busForm
-    input#bus(type="text", pattern="([0-9]{3})|([Nn][0-9]{2})|(([0-9]{3} )([0-9]{3} ?)*)|(([Nn][0-9]{2} )([Nn][0-9]{2} ?)*)")
+    input#bus(type="text", pattern="([Nn0-9eE]?[0-9-]{2})|(([Nn0-9eE]?[0-9-]{2} )([Nn0-9eE]?[0-9-]{2} ?)*)")
   #popup
     span#popupSpan Nie ma żadnego autobusu na trasie!
   #map
