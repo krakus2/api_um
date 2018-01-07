@@ -113,8 +113,8 @@ function initMap(object, avgLat, avgLng) {
   }
     if(!isNaN(avgLat)){
       const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: myLatLng
+        zoom: (JSON.parse(sessionStorage.getItem("bus")).replay) ? (JSON.parse(sessionStorage.getItem("myTemporaryPosition")).mapZoom) : 12,
+        center: (JSON.parse(sessionStorage.getItem("bus")).replay) ? (JSON.parse(sessionStorage.getItem("myTemporaryPosition")).mapCentre): myLatLng
       });
 
     google.maps.event.addListener(map, 'zoom_changed', () => {
