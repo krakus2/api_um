@@ -17,6 +17,21 @@ window.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     let busNumber = document.querySelector('input#bus').value
     busNumber = busNumber.trim();
+    const busObject = {
+      busNumber,
+      replay: false
+    }
+    if(sessionStorage.getItem("bus") != null ){
+      if(JSON.parse(sessionStorage.getItem("bus")).busNumber == busObject.busNumber){
+        busObject.replay = true;
+        sessionStorage.setItem("bus", JSON.stringify(busObject));
+      }else{
+        sessionStorage.setItem("bus", JSON.stringify(busObject));
+      }
+    }else{
+      sessionStorage.setItem("bus", JSON.stringify(busObject));
+      console.log("false")
+    }
 
     busNumber = busNumber.split("")
     busNumber = busNumber.map(elem => {
@@ -93,10 +108,23 @@ function getBus(busNumber){
 function initMap(object, avgLat, avgLng) {
   const myLatLng = {lat: avgLat, lng: avgLng};
   //var myLatLng = {lat: -29.363, lng: 131.044};
-  if(!isNaN(avgLat)){
-    const map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 12,
-      center: myLatLng
+  if(!JSON.parse(sessionStorage.getItem("bus")).replay){
+
+  }
+    if(!isNaN(avgLat)){
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: myLatLng
+      });
+
+    google.maps.event.addListener(map, 'zoom_changed', () => {
+      const mapZoom = map.getZoom();
+      const mapCentre = map.getCenter();
+      const myTemporaryPosition = {
+        mapZoom,
+        mapCentre
+      }
+      sessionStorage.setItem("myTemporaryPosition", JSON.stringify(myTemporaryPosition));
     });
 
     const infowindow = new google.maps.InfoWindow();
