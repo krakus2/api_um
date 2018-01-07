@@ -1,13 +1,22 @@
 const api_key = "2797b5a7-48f4-42a3-a062-bf8cf76357d9"
 const mapsApi_key = "AIzaSyDl4DVYLh4h_5WdJ46t9_g0zwAqw57TJUU"
 
+window.onbeforeunload = function(){
+    sessionStorage.setItem("origin", window.location.href);
+}
+
+window.onload = function(){
+    if(window.location.href == sessionStorage.getItem("origin")){
+        sessionStorage.clear();
+    }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const busForm = document.querySelector('form#busForm');
   busForm.addEventListener('submit', (e) => {
     e.preventDefault();
     let busNumber = document.querySelector('input#bus').value
     busNumber = busNumber.trim();
-    //console.log(busNumber.length)
 
     busNumber = busNumber.split("")
     busNumber = busNumber.map(elem => {
@@ -27,7 +36,19 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log(busNumber)
     getBus(busNumber)
   })
-})
+
+  const input = document.querySelector('input#bus');
+	const span = document.querySelector('span.disapear');
+
+
+		input.addEventListener('focus', function() {
+			span.classList.add('move');
+		})
+		input.addEventListener('blur', function(e) {
+			if(e.target.value.length == 0)
+				span.classList.remove('move');
+		})
+	});
 
 function getBus(busNumber){
   //console.log(busNumber, "busNumber z getBus")
