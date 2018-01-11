@@ -1,5 +1,4 @@
-const api_key = "2797b5a7-48f4-42a3-a062-bf8cf76357d9"
-const mapsApi_key = "AIzaSyDl4DVYLh4h_5WdJ46t9_g0zwAqw57TJUU"
+
 //https://api.um.warszawa.pl/api/action/dbtimetable_get/?id=e923fa0e-d96c-43f9-ae6e60518c9f3238&busstopId=7009&busstopNr=01&line=520&apikey=2797b5a7-48f4-42a3-a062-bf8cf76357d9
 //https://api.um.warszawa.pl/api/action/dbtimetable_get/?id=88cd555f-6f31-43ca-9de4-66c479ad5942&busstopId=7009&busstopNr=01&apikey=2797b5a7-48f4-42a3-a062-bf8cf76357d9
 
@@ -187,11 +186,11 @@ function callback2(results, status) {
   const geoPOI_ready = [];
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
-    //  console.log(results)
       geoPOI.push(results[i]);
     }
   }
   geoPOI.forEach( (elem, i) => {
+    console.log(elem.geometry.location.lat(), elem.geometry.location.lng())
     geoPOI_ready.push([...elem.name.split(" ")])
   })
   console.log(geoPOI_ready)
