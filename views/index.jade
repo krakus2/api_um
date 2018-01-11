@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDl4DVYLh4h_5WdJ46t9_g0zwAqw57TJUU&libraries=places&')
   script(src='/javascripts/content.js', type='text/javascript')
   script(src="https://unpkg.com/axios/dist/axios.min.js")
   .headerInput
@@ -10,5 +11,5 @@ block content
   #popup
     span#popupSpan Nie ma żadnego autobusu na trasie!
   #map
-  script(async, defer, src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDl4DVYLh4h_5WdJ46t9_g0zwAqw57TJUU&callback=initMap')
+  
     
