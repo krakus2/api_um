@@ -1,4 +1,5 @@
-
+const api_key = "2797b5a7-48f4-42a3-a062-bf8cf76357d9"
+const mapsApi_key = "AIzaSyDl4DVYLh4h_5WdJ46t9_g0zwAqw57TJUU"
 //https://api.um.warszawa.pl/api/action/dbtimetable_get/?id=e923fa0e-d96c-43f9-ae6e60518c9f3238&busstopId=7009&busstopNr=01&line=520&apikey=2797b5a7-48f4-42a3-a062-bf8cf76357d9
 //https://api.um.warszawa.pl/api/action/dbtimetable_get/?id=88cd555f-6f31-43ca-9de4-66c479ad5942&busstopId=7009&busstopNr=01&apikey=2797b5a7-48f4-42a3-a062-bf8cf76357d9
 
@@ -46,7 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if(busNumber.length > 3){
       busNumber = busNumber.split(" ")
-      console.log(busNumber)
+      //console.log(busNumber)
     }else{
       busNumber = [busNumber]
     }
@@ -80,7 +81,18 @@ function getBus(busNumber){
   }
   //console.log(urlArray, "urlArray")
   const promiseArray = urlArray.map( url => axios.get(url))
-  axios.all(promiseArray)
+
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    proxy: {
+      host: '104.236.174.88',
+      port: 3128
+    }
+  };
+
+  axios.all(promiseArray, config)
   .then(function(results){
     let newResults = results.map(elem => elem.data.result)
     newResults = newResults.reduce((a, b) => a.concat(b), []);
