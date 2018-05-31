@@ -87,5 +87,15 @@ input#bus{
 	outline: none;
 	font-size: 18px;
   background-color: var(--lightGrey);
+}
 
+#schedules{
+  width: 100vw;
+  height: 500px;
+  background-color: rgba(255, 100, 0, 0.1);
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
